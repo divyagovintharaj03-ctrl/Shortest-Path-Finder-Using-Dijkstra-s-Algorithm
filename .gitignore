@@ -1,0 +1,22 @@
+# Compiled binaries and object files
+*.exe
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+pathfinder
+test_pathfinder
+
+# Python cache
+__pycache__/
+*.pyc
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary test data
+data/test_*.csv

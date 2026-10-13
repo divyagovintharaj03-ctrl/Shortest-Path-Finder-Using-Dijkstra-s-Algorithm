@@ -1,0 +1,65 @@
+{
+  "project": "Shortest Path Finder",
+  "author": "Data Structures Mini Project",
+  "description": "Realistic fictional road network with 10 locations and 17 weighted roads for Dijkstra's algorithm demonstration.",
+  "disclaimer": "Distances are illustrative values in kilometers designed for testing optimal route finding, not real-world GPS coordinates.",
+  "sample_verified_query": {
+    "source": { "id": 1, "name": "College" },
+    "destination": { "id": 10, "name": "Airport" },
+    "expected_shortest_distance_km": 18.00,
+    "expected_route_sequence": ["College", "Hospital", "Park", "Airport"],
+    "expected_roads_used": [
+      { "from": "College", "to": "Hospital", "distance_km": 6.5 },
+      { "from": "Hospital", "to": "Park", "distance_km": 3.0 },
+      { "from": "Park", "to": "Airport", "distance_km": 8.5 }
+    ],
+    "competing_alternate_routes": [
+      {
+        "route": ["College", "Bus Stand", "Library", "City Centre", "Airport"],
+        "distance_km": 18.70,
+        "calculation": "4.0 + 3.5 + 5.2 + 6.0"
+      },
+      {
+        "route": ["College", "Hospital", "Park", "City Centre", "Airport"],
+        "distance_km": 20.50,
+        "calculation": "6.5 + 3.0 + 5.0 + 6.0"
+      },
+      {
+        "route": ["College", "Bus Stand", "Railway Station", "Market", "Shopping Mall", "Airport"],
+        "distance_km": 22.70,
+        "calculation": "4.0 + 5.0 + 4.2 + 4.0 + 5.5"
+      }
+    ]
+  },
+  "locations": [
+    { "id": 1, "code": "COLLEGE", "name": "College", "x": 130, "y": 160 },
+    { "id": 2, "code": "BUS_STAND", "name": "Bus Stand", "x": 290, "y": 250 },
+    { "id": 3, "code": "RAILWAY_STN", "name": "Railway Station", "x": 460, "y": 130 },
+    { "id": 4, "code": "HOSPITAL", "name": "Hospital", "x": 220, "y": 430 },
+    { "id": 5, "code": "LIBRARY", "name": "Library", "x": 460, "y": 310 },
+    { "id": 6, "code": "MARKET", "name": "Market", "x": 640, "y": 210 },
+    { "id": 7, "code": "PARK", "name": "Park", "x": 410, "y": 500 },
+    { "id": 8, "code": "CITY_CENTRE", "name": "City Centre", "x": 670, "y": 400 },
+    { "id": 9, "code": "SHOPPING_MALL", "name": "Shopping Mall", "x": 830, "y": 260 },
+    { "id": 10, "code": "AIRPORT", "name": "Airport", "x": 870, "y": 490 }
+  ],
+  "roads": [
+    { "u_id": 1, "v_id": 2, "weight": 4.0, "bidirectional": true },
+    { "u_id": 1, "v_id": 4, "weight": 6.5, "bidirectional": true },
+    { "u_id": 2, "v_id": 3, "weight": 5.0, "bidirectional": true },
+    { "u_id": 2, "v_id": 5, "weight": 3.5, "bidirectional": true },
+    { "u_id": 3, "v_id": 6, "weight": 4.2, "bidirectional": true },
+    { "u_id": 4, "v_id": 5, "weight": 4.0, "bidirectional": true },
+    { "u_id": 4, "v_id": 7, "weight": 3.0, "bidirectional": true },
+    { "u_id": 5, "v_id": 6, "weight": 3.8, "bidirectional": true },
+    { "u_id": 5, "v_id": 7, "weight": 4.5, "bidirectional": true },
+    { "u_id": 5, "v_id": 8, "weight": 5.2, "bidirectional": true },
+    { "u_id": 6, "v_id": 9, "weight": 4.0, "bidirectional": true },
+    { "u_id": 6, "v_id": 8, "weight": 3.5, "bidirectional": true },
+    { "u_id": 7, "v_id": 8, "weight": 5.0, "bidirectional": true },
+    { "u_id": 7, "v_id": 10, "weight": 8.5, "bidirectional": true },
+    { "u_id": 8, "v_id": 9, "weight": 3.0, "bidirectional": true },
+    { "u_id": 8, "v_id": 10, "weight": 6.0, "bidirectional": true },
+    { "u_id": 9, "v_id": 10, "weight": 5.5, "bidirectional": true }
+  ]
+}

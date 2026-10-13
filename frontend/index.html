@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Shortest Path Finder - Data Structures Mini Project implementing Dijkstra's Algorithm in C with an interactive modern Light Theme web interface.">
+  <title>Shortest Path Finder | C Data Structures Project</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand" data-switch-tab="dashboard">
+        <div class="brand-icon">SPF</div>
+        <div class="brand-text">
+          <h1>Shortest Path Finder</h1>
+        </div>
+        <span class="brand-badge">C Core + Web</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active" data-tab="dashboard">Dashboard</a></li>
+          <li><a href="#" class="nav-link" data-tab="route">Find Route</a></li>
+          <li><a href="#" class="nav-link" data-tab="vis">Map View</a></li>
+          <li><a href="#" class="nav-link" data-tab="locations">Locations</a></li>
+          <li><a href="#" class="nav-link" data-tab="roads">Roads</a></li>
+          <li><a href="#" class="nav-link" data-tab="demo">Algorithm Demo</a></li>
+          <li><a href="#" class="nav-link" data-tab="about">Documentation</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-status">
+        <span class="status-dot"></span>
+        <span id="navBackendStatus">C Engine Active</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace Content -->
+  <main class="main-wrapper">
+
+    <!-- 1. DASHBOARD VIEW -->
+    <section id="dashboardTab" class="tab-pane active">
+      <div class="page-header">
+        <h2 class="page-title">Project Overview Dashboard</h2>
+        <p class="page-subtitle">Route-finding graph application powered by Dijkstra's algorithm and binary min-heap priority queue in C.</p>
+      </div>
+
+      <!-- Key Metrics Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📍</div>
+          <div class="stat-content">
+            <span class="stat-label">Total Locations</span>
+            <span class="stat-value" id="statTotalLocations">10</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">🛣️</div>
+          <div class="stat-content">
+            <span class="stat-label">Total Roads</span>
+            <span class="stat-value" id="statTotalRoads">17</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">⇄</div>
+          <div class="stat-content">
+            <span class="stat-label">Two-Way Roads</span>
+            <span class="stat-value" id="statBidirRoads">17</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-content">
+            <span class="stat-label">Time Complexity</span>
+            <span class="stat-value" style="font-size: 1.25rem; color: var(--primary-700);">O((V+E)log V)</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+        <!-- Quick Route Query Card -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">🚀 Quick Route Query</h3>
+          </div>
+          <div class="form-row" style="margin-bottom: 1rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="dashSourceSelect">Starting Location</label>
+              <select id="dashSourceSelect" class="form-select"></select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="dashDestSelect">Target Destination</label>
+              <select id="dashDestSelect" class="form-select"></select>
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.75rem;">
+            <button id="dashFindRouteBtn" class="btn btn-primary" style="flex: 1;">Find Shortest Route</button>
+            <button class="btn btn-secondary" data-switch-tab="route">Open Full Finder</button>
+          </div>
+        </div>
+
+        <!-- Algorithm Highlights Card -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">🧠 Data Structures & Core Logic</h3>
+          </div>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.9rem;">
+            <li><strong>Graph Storage:</strong> Adjacency List dynamically allocated in C.</li>
+            <li><strong>Priority Queue:</strong> Binary Min-Heap with indexed position tracking for <code>O(log V)</code> decrease-key.</li>
+            <li><strong>Calculation Engine:</strong> Pure compiled C binary (no JavaScript approximation).</li>
+            <li><strong>Storage & Persistence:</strong> Real-time CSV file synchronization.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Recent Searches Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">🕒 Recent Route Calculations</h3>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Stored from your session</span>
+        </div>
+        <div id="recentSearchesList" class="route-sequence"></div>
+      </div>
+    </section>
+
+    <!-- 2. FIND ROUTE VIEW -->
+    <section id="routeTab" class="tab-pane">
+      <div class="page-header">
+        <h2 class="page-title">Find Shortest Route</h2>
+        <p class="page-subtitle">Select origin and destination to execute Dijkstra's algorithm in the compiled C backend.</p>
+      </div>
+
+      <div class="finder-layout">
+        <!-- Controls & Results Sidebar -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Route Parameters</h3>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sourceSelect">Source Location</label>
+              <select id="sourceSelect" class="form-select"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="destSelect">Destination Location</label>
+              <select id="destSelect" class="form-select"></select>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-top: 1.25rem;">
+              <button id="findRouteBtn" class="btn btn-primary" style="flex: 1;">Calculate Shortest Path</button>
+              <button id="resetRouteBtn" class="btn btn-secondary">Reset</button>
+            </div>
+          </div>
+
+          <!-- Dynamic Result Display Box -->
+          <div id="routeResultBox" class="result-box">
+            <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--primary-400);">🗺</div>
+              <div style="font-weight: 600; color: var(--text-main);">Choose your route endpoints</div>
+              <div style="font-size: 0.85rem; margin-top: 0.25rem;">Select source and destination above and click <strong>Calculate Shortest Path</strong>.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Embedded Interactive Map -->
+        <div class="card" style="padding: 1rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <h3 class="card-title" style="font-size: 1rem;">Live Network Map</h3>
+            <span style="font-size: 0.78rem; color: var(--text-muted);">Drag any node to rearrange layout</span>
+          </div>
+          <div class="graph-canvas-container" style="height: 520px;">
+            <canvas id="graphCanvas"></canvas>
+            <div class="canvas-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Start Location</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> Destination</div>
+              <div class="legend-item"><span class="legend-line" style="background:#7c3aed;"></span> Shortest Path (C Dijkstra)</div>
+              <div class="legend-item"><span class="legend-line" style="background:#cbd5e1;"></span> Other Network Roads</div>
+            </div>
+            <div class="canvas-controls">
+              <button id="zoomInBtn" class="canvas-btn" title="Zoom In">+</button>
+              <button id="zoomOutBtn" class="canvas-btn" title="Zoom Out">−</button>
+              <button id="resetZoomBtn" class="canvas-btn" title="Fit Screen">⟲</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. MAP VIEW (FULLSCREEN) -->
+    <section id="visTab" class="tab-pane">
+      <div class="page-header" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+        <div>
+          <h2 class="page-title">Interactive Graph Visualization</h2>
+          <p class="page-subtitle">Visual representation of graph vertices (locations) and weighted edges (roads).</p>
+        </div>
+        <button class="btn btn-secondary btn-sm" data-switch-tab="route">← Back to Route Query</button>
+      </div>
+
+      <div class="card" style="padding: 1rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+          <div style="font-size: 0.88rem; color: var(--text-muted);">
+            💡 <strong>Tip:</strong> Drag vertices to organize positions. Use mouse wheel or controls to zoom and pan.
+          </div>
+          <button id="resetDefaultsBtn" class="btn btn-secondary btn-sm">↺ Restore Default Network</button>
+        </div>
+        <div class="graph-canvas-container" style="height: 600px;">
+          <!-- Graph visualizer attaches to primary canvas -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. LOCATION MANAGEMENT -->
+    <section id="locationsTab" class="tab-pane">
+      <div class="page-header" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+        <div>
+          <h2 class="page-title">Location Management</h2>
+          <p class="page-subtitle">Add, inspect, or delete graph vertices. Changes are saved persistently to file storage.</p>
+        </div>
+        <button id="openAddLocModalBtn" class="btn btn-primary">+ Add New Location</button>
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 80px;">ID</th>
+                <th>Unique Code</th>
+                <th>Location Name</th>
+                <th>Coordinates (X, Y)</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="locationTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. ROAD MANAGEMENT -->
+    <section id="roadsTab" class="tab-pane">
+      <div class="page-header" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+        <div>
+          <h2 class="page-title">Road Management</h2>
+          <p class="page-subtitle">Manage weighted edges connecting graph vertices with positive distance costs.</p>
+        </div>
+        <button id="openAddRoadModalBtn" class="btn btn-primary">+ Add New Road</button>
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>From Location</th>
+                <th>To Location</th>
+                <th>Distance / Cost</th>
+                <th>Direction</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="roadTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. ALGORITHM DEMONSTRATION -->
+    <section id="demoTab" class="tab-pane">
+      <div class="page-header">
+        <h2 class="page-title">Dijkstra's Algorithm Demonstration</h2>
+        <p class="page-subtitle">Inspect the step-by-step execution trace captured directly during the C computation.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Step-by-Step C Execution Walkthrough</h3>
+        </div>
+        <div id="demoTraceContainer"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Algorithm Operational Mechanics</h3>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+          <div style="background: var(--bg-subtle); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--primary-800); margin-bottom: 0.4rem;">1. Greedy Vertex Selection</h4>
+            <p style="font-size: 0.88rem; color: var(--text-muted);">
+              Extracts the unsettled vertex <code>u</code> with the smallest tentative distance using the binary min-heap in <code>O(log V)</code> time.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-subtle); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--primary-800); margin-bottom: 0.4rem;">2. Edge Relaxation</h4>
+            <p style="font-size: 0.88rem; color: var(--text-muted);">
+              For every outgoing edge <code>(u, v)</code> with weight <code>w</code>, if <code>dist[u] + w &lt; dist[v]</code>, we update <code>dist[v]</code>, record <code>prev[v] = u</code>, and decrease key in the heap.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-subtle); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--primary-800); margin-bottom: 0.4rem;">3. Backward Reconstruction</h4>
+            <p style="font-size: 0.88rem; color: var(--text-muted);">
+              Once destination is settled, follow predecessor pointers backwards from destination to source, then reverse the sequence to form the final path.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. DOCUMENTATION / ABOUT VIEW -->
+    <section id="aboutTab" class="tab-pane">
+      <div class="page-header">
+        <h2 class="page-title">Project Documentation & Lab Record</h2>
+        <p class="page-subtitle">Comprehensive academic specifications, system architecture, viva questions, and record format.</p>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--primary-800);">1. Aim of the Project</h3>
+        <p style="font-size: 0.92rem; color: var(--text-main); margin-bottom: 1.25rem;">
+          To design, implement, and demonstrate a complete, robust Route Finding System that models geographical locations as vertices and interconnecting roads as positive weighted edges in a graph, computing the optimal shortest path between any chosen source and destination using <strong>Dijkstra's Algorithm</strong> implemented in <strong>C</strong> with an <strong>Adjacency List</strong> and <strong>Binary Min-Heap Priority Queue</strong>, accompanied by an interactive light-theme web frontend.
+        </p>
+
+        <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--primary-800);">2. Data Structures Employed</h3>
+        <ul style="margin-left: 1.5rem; margin-bottom: 1.25rem; font-size: 0.92rem; display: flex; flex-direction: column; gap: 0.5rem;">
+          <li><strong>Graph (Adjacency List):</strong> An array of vertices (Locations) where each vertex maintains a singly linked list of adjacent edges (Roads) storing target vertex index, positive weight, and directionality.</li>
+          <li><strong>Binary Min-Heap Priority Queue:</strong> A complete binary tree represented as an array of heap nodes, equipped with an inverted position lookup table <code>pos[v]</code> to achieve <code>O(1)</code> node lookup and <code>O(log V)</code> decrease-key operations.</li>
+          <li><strong>Distance & Predecessor Arrays:</strong> <code>dist[V]</code> stores current optimal distance from source; <code>prev[V]</code> stores the predecessor vertex for shortest-path backtracking.</li>
+        </ul>
+
+        <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--primary-800);">3. Complexity Analysis</h3>
+        <div class="table-responsive" style="margin-bottom: 1.25rem;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Standard Array Implementation</th>
+                <th>Our Implementation (Min-Heap + Adj List)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Extract-Min</strong></td>
+                <td>O(V)</td>
+                <td><strong>O(log V)</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Decrease-Key</strong></td>
+                <td>O(1)</td>
+                <td><strong>O(log V)</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Total Time Complexity</strong></td>
+                <td>O(V²)</td>
+                <td><strong>O((V + E) log V)</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Space Complexity</strong></td>
+                <td>O(V²) (Matrix)</td>
+                <td><strong>O(V + E)</strong> (Adjacency List + Heap)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--primary-800);">4. Dijkstra's Algorithm (Pseudocode)</h3>
+        <pre class="code-block" style="margin-bottom: 1.25rem;">
+ALGORITHM Dijkstra(Graph G, Source s, Destination d):
+    FOR each vertex v in G:
+        dist[v] ← ∞
+        prev[v] ← -1
+    dist[s] ← 0
+
+    Initialize MinHeap Q with all vertices v with key dist[v]
+    
+    WHILE Q is not empty:
+        u ← ExtractMin(Q)
+        IF dist[u] = ∞: BREAK   // Remaining nodes unreachable
+        IF u = d: BREAK          // Destination reached!
+        
+        FOR each edge (u, v) with weight w in Adj[u]:
+            IF dist[u] + w < dist[v]:
+                dist[v] ← dist[u] + w
+                prev[v] ← u
+                DecreaseKey(Q, v, dist[v])
+                
+    Reconstruct path backward from d to s using prev[]
+    RETURN (dist[d], Reconstructed_Path)
+        </pre>
+
+        <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--primary-800);">5. Sample Manual Verification</h3>
+        <div style="background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); font-size: 0.9rem; margin-bottom: 1.25rem;">
+          <p><strong>Query:</strong> From <code>College (ID 1)</code> to <code>Airport (ID 10)</code></p>
+          <p><strong>Available Routes:</strong></p>
+          <ul style="margin-left: 1.5rem; margin-top: 0.4rem; display: flex; flex-direction: column; gap: 4px;">
+            <li>Route 1: 1 → 4 (6.5) → 7 (3.0) → 10 (8.5) = <strong>18.00 km</strong> (OPTIMAL)</li>
+            <li>Route 2: 1 → 2 (4.0) → 5 (3.5) → 8 (5.2) → 10 (6.0) = <strong>18.70 km</strong></li>
+            <li>Route 3: 1 → 4 (6.5) → 7 (3.0) → 8 (5.0) → 10 (6.0) = <strong>20.50 km</strong></li>
+            <li>Route 4: 1 → 2 (4.0) → 3 (5.0) → 6 (4.2) → 9 (4.0) → 10 (5.5) = <strong>22.70 km</strong></li>
+          </ul>
+          <p style="margin-top: 0.5rem; color: var(--primary-700); font-weight: 700;">Result confirmed by C engine: 18.00 km via College → Hospital → Park → Airport.</p>
+        </div>
+
+        <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--primary-800);">6. Viva Questions & Model Answers</h3>
+        <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.9rem;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-md);">
+            <strong>Q1: Why does Dijkstra's algorithm fail with negative edge weights?</strong><br>
+            <span style="color: var(--text-muted);">A: Dijkstra operates on a greedy principle, assuming that once a vertex is settled/extracted from the priority queue, its shortest distance is finalized. A negative edge encountered later could produce an even shorter path to an already settled node, breaking the optimal substructure. For graphs with negative weights, the Bellman-Ford algorithm must be used.</span>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-md);">
+            <strong>Q2: How does using a Binary Min-Heap improve performance over a 2D matrix?</strong><br>
+            <span style="color: var(--text-muted);">A: With an adjacency matrix and linear scan, finding the minimum distance node takes O(V), leading to O(V²) time. With an adjacency list and binary min-heap, extract-min and decrease-key take O(log V), reducing total runtime to O((V + E) log V), which is drastically faster on sparse networks.</span>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-md);">
+            <strong>Q3: How is Decrease-Key achieved in O(log V) without searching the entire heap?</strong><br>
+            <span style="color: var(--text-muted);">A: We maintain an inverted position array <code>pos[v]</code> where <code>pos[v]</code> stores the index of vertex <code>v</code> inside the heap array. Whenever two heap nodes are swapped during heapify or bubble-up, their corresponding positions in <code>pos[]</code> are synchronized in O(1).</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Add Location Modal -->
+  <div id="addLocationModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Location</h3>
+        <button id="closeAddLocModalBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--text-muted);">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="newLocId">Unique Location ID</label>
+          <input type="number" id="newLocId" class="form-control" placeholder="e.g. 11">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="newLocCode">Location Code (Slug)</label>
+          <input type="text" id="newLocCode" class="form-control" placeholder="e.g. STADIUM">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="newLocName">Display Name</label>
+          <input type="text" id="newLocName" class="form-control" placeholder="e.g. Sports Stadium">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="newLocX">Map X Position</label>
+            <input type="number" id="newLocX" class="form-control" value="500">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="newLocY">Map Y Position</label>
+            <input type="number" id="newLocY" class="form-control" value="350">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="document.getElementById('addLocationModal').classList.remove('open')">Cancel</button>
+        <button id="saveLocBtn" class="btn btn-primary">Save Location</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Road Modal -->
+  <div id="addRoadModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Road</h3>
+        <button id="closeAddRoadModalBtn" style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--text-muted);">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="roadUSelect">From Location</label>
+          <select id="roadUSelect" class="form-select"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="roadVSelect">To Location</label>
+          <select id="roadVSelect" class="form-select"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="newRoadWeight">Distance / Cost (km)</label>
+          <input type="number" step="0.1" id="newRoadWeight" class="form-control" placeholder="e.g. 4.5">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="roadBidirSelect">Road Direction</label>
+          <select id="roadBidirSelect" class="form-select">
+            <option value="1">Two-Way (Bidirectional)</option>
+            <option value="0">One-Way (Directed)</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="document.getElementById('addRoadModal').classList.remove('open')">Cancel</button>
+        <button id="saveRoadBtn" class="btn btn-primary">Save Road</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Alerts Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div>
+        <strong>Shortest Path Finder</strong> — Data Structures Mini Project
+      </div>
+      <div>
+        Backend: <strong>C</strong> (Dijkstra Min-Heap) | Frontend: <strong>HTML5 / CSS3 / Vanilla JS</strong>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/graph_vis.js"></script>
+  <script src="js/dijkstra_demo.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
