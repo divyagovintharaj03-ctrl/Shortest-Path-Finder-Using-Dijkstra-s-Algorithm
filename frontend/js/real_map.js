@@ -37,12 +37,26 @@ class RealWorldMap {
       attributionControl: true
     }).setView([13.04, 80.22], 12);
 
-    // Clean, modern Light Theme tiles from CartoDB Positron
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    // Completely FREE and OPEN tile layers (NO API KEY REQUIRED)
+    const osmStandard = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+    const cartoLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       subdomains: 'abcd',
-      maxZoom: 19
-    }).addTo(this.map);
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+    });
+
+    // Default to Carto Light / OSM Standard
+    cartoLight.addTo(this.map);
+
+    // Layer switcher so user can toggle between OSM Street View and Carto Light View
+    L.control.layers({
+      "Clean Light Map (Carto)": cartoLight,
+      "Standard Street Map (OSM)": osmStandard
+    }, null, { position: 'topright' }).addTo(this.map);
 
     // Allow user to click anywhere on the real world map to drop a new location pin
     this.map.on('click', (e) => {
