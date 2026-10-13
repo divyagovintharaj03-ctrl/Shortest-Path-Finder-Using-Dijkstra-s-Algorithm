@@ -17,6 +17,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const visualizer = new GraphVisualizer('graphCanvas');
   const demonstrator = new DijkstraDemonstrator('demoTraceContainer');
+  let realMap = null;
+  let realMapFull = null;
+
+  try {
+    realMap = new RealWorldMap('realWorldMap');
+    realMapFull = new RealWorldMap('realWorldMapFull');
+  } catch (e) {
+    console.warn('RealWorldMap init notice:', e);
+  }
+
+  // View toggle handlers between Real World Map and Schematic Canvas
+  const toggleRealMapBtn = document.getElementById('toggleRealMapBtn');
+  const toggleCanvasMapBtn = document.getElementById('toggleCanvasMapBtn');
+  const realWorldMapEl = document.getElementById('realWorldMap');
+  const graphCanvasContainerEl = document.getElementById('graphCanvasContainer');
+
+  if (toggleRealMapBtn && toggleCanvasMapBtn) {
+    toggleRealMapBtn.onclick = () => {
+      toggleRealMapBtn.className = 'btn btn-sm btn-primary';
+      toggleCanvasMapBtn.className = 'btn btn-sm btn-secondary';
+      if (realWorldMapEl) realWorldMapEl.style.display = 'block';
+      if (graphCanvasContainerEl) graphCanvasContainerEl.style.display = 'none';
+      if (realMap) realMap.invalidateSize();
+    };
+
+    toggleCanvasMapBtn.onclick = () => {
+      toggleCanvasMapBtn.className = 'btn btn-sm btn-primary';
+      toggleRealMapBtn.className = 'btn btn-sm btn-secondary';
+      if (realWorldMapEl) realWorldMapEl.style.display = 'none';
+      if (graphCanvasContainerEl) graphCanvasContainerEl.style.display = 'block';
+      visualizer.resize();
+      visualizer.render();
+    };
+  }
+
+  // Interactive Map click callback for dropping new GPS pins
+  window.selectAsSource = (id) => {
+    state.sourceId = id;
+    updateSelectors();
+    showToast(`Origin set to Location #${id}`, 'info');
+    executeRouteQuery();
+  };
+
+  window.selectAsDest = (id) => {
+    state.destId = id;
+    updateSelectors();
+    showToast(`Destination set to Location #${id}`, 'info');
+    executeRouteQuery();
+  };
+
+  window.onMapClickLocation = (lat, lng) => {
+    const maxId = state.locations.reduce((max, l) => Math.max(max, l.id), 0);
+    const idInput = document.getElementById('newLocId');
+    const codeInput = document.getElementById('newLocCode');
+    const nameInput = document.getElementById('newLocName');
+    const xInput = document.getElementById('newLocX');
+    const yInput = document.getElementById('newLocY');
+    const modal = document.getElementById('addLocationModal');
+
+    if (idInput) idInput.value = maxId + 1;
+    if (codeInput) codeInput.value = `GEO_${maxId + 1}`;
+    if (nameInput) nameInput.value = `Place @ ${lat}, ${lng}`;
+    if (xInput) xInput.value = lng;
+    if (yInput) yInput.value = lat;
+
+    if (modal) modal.classList.add('open');
+    showToast(`GPS captured: ${lat}, ${lng}. Name and save this place!`, 'info');
+  };
 
   // Utility toast
   function showToast(msg, type = 'info') {
@@ -51,9 +119,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (tabId === 'vis' || tabId === 'route' || tabId === 'dashboard') {
       setTimeout(() => {
+        if (realMap) realMap.invalidateSize();
+        if (realMapFull) realMapFull.invalidateSize();
         visualizer.resize();
         visualizer.render();
-      }, 50);
+      }, 80);
     }
   }
 
@@ -92,6 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
       state.stats = data.stats || {};
 
       visualizer.setData(state.locations, state.roads);
+      if (realMap) realMap.setData(state.locations, state.roads);
+      if (realMapFull) realMapFull.setData(state.locations, state.roads);
 
       updateSelectors();
       updateDashboardStats();
@@ -102,6 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // If we had an active path, re-highlight
       if (state.activePath) {
         visualizer.setHighlight(state.sourceId, state.destId, state.activePath);
+        if (realMap) realMap.setHighlight(state.sourceId, state.destId, state.activePath);
+        if (realMapFull) realMapFull.setHighlight(state.sourceId, state.destId, state.activePath);
       }
     } catch (err) {
       console.error(err);
@@ -244,6 +318,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       state.activePath = res;
       visualizer.setHighlight(srcId, destId, res);
+      if (realMap) realMap.setHighlight(srcId, destId, res);
+      if (realMapFull) realMapFull.setHighlight(srcId, destId, res);
 
       // Load traces into algorithm demonstrator
       demonstrator.loadTraces(res.traces, state.locations, srcId, destId);
@@ -413,6 +489,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('resetRouteBtn')?.addEventListener('click', () => {
     state.activePath = null;
     visualizer.clearHighlight();
+    if (realMap) realMap.clearHighlight();
+    if (realMapFull) realMapFull.clearHighlight();
     const resultBox = document.getElementById('routeResultBox');
     if (resultBox) {
       resultBox.innerHTML = `

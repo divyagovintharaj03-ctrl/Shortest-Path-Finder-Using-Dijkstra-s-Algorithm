@@ -177,36 +177,38 @@ int storage_save_all(const Graph* g, const char* loc_file, const char* road_file
 int storage_reset_defaults(Graph* g, const char* loc_file, const char* road_file) {
     graph_clear(g);
 
-    /* 10 Default Locations */
-    graph_add_location(g, 1, "COLLEGE", "College", 130, 160);
-    graph_add_location(g, 2, "BUS_STAND", "Bus Stand", 290, 250);
-    graph_add_location(g, 3, "RAILWAY_STN", "Railway Station", 460, 130);
-    graph_add_location(g, 4, "HOSPITAL", "Hospital", 220, 430);
-    graph_add_location(g, 5, "LIBRARY", "Library", 460, 310);
-    graph_add_location(g, 6, "MARKET", "Market", 640, 210);
-    graph_add_location(g, 7, "PARK", "Park", 410, 500);
-    graph_add_location(g, 8, "CITY_CENTRE", "City Centre", 670, 400);
-    graph_add_location(g, 9, "SHOPPING_MALL", "Shopping Mall", 830, 260);
-    graph_add_location(g, 10, "AIRPORT", "Airport", 870, 490);
+    /* 12 Real-World Metropolitan Locations (x = Longitude, y = Latitude) */
+    graph_add_location(g, 1, "CENTRAL_STN", "Central Railway Station", 80.2757, 13.0827);
+    graph_add_location(g, 2, "MARINA_BEACH", "Marina Beach", 80.2824, 13.0500);
+    graph_add_location(g, 3, "T_NAGAR", "T. Nagar (Panagal Park)", 80.2337, 13.0405);
+    graph_add_location(g, 4, "GUINDY_KATHIPARA", "Guindy Kathipara Junction", 80.2206, 13.0067);
+    graph_add_location(g, 5, "ANNA_NAGAR", "Anna Nagar Tower", 80.2100, 13.0850);
+    graph_add_location(g, 6, "CMBT_KOYAMBEDU", "Koyambedu CMBT Bus Terminus", 80.1948, 13.0694);
+    graph_add_location(g, 7, "VELACHERY", "Velachery Junction", 80.2180, 12.9815);
+    graph_add_location(g, 8, "IIT_MADRAS", "IIT Madras Main Gate", 80.2337, 12.9915);
+    graph_add_location(g, 9, "AIRPORT_MAA", "Chennai International Airport (MAA)", 80.1709, 12.9941);
+    graph_add_location(g, 10, "OMR_THORAIPAKKAM", "OMR IT Corridor (Thoraipakkam)", 80.2312, 12.9360);
+    graph_add_location(g, 11, "TAMBARAM_JN", "Tambaram Railway Junction", 80.1000, 12.9249);
+    graph_add_location(g, 12, "MYLAPORE", "Mylapore Kapaleeshwarar", 80.2694, 13.0334);
 
-    /* 17 Default Roads */
-    graph_add_road(g, 1, 2, 4.0, 1);
-    graph_add_road(g, 1, 4, 6.5, 1);
-    graph_add_road(g, 2, 3, 5.0, 1);
-    graph_add_road(g, 2, 5, 3.5, 1);
-    graph_add_road(g, 3, 6, 4.2, 1);
-    graph_add_road(g, 4, 5, 4.0, 1);
-    graph_add_road(g, 4, 7, 3.0, 1);
-    graph_add_road(g, 5, 6, 3.8, 1);
-    graph_add_road(g, 5, 7, 4.5, 1);
-    graph_add_road(g, 5, 8, 5.2, 1);
-    graph_add_road(g, 6, 9, 4.0, 1);
-    graph_add_road(g, 6, 8, 3.5, 1);
-    graph_add_road(g, 7, 8, 5.0, 1);
-    graph_add_road(g, 7, 10, 8.5, 1);
-    graph_add_road(g, 8, 9, 3.0, 1);
-    graph_add_road(g, 8, 10, 6.0, 1);
-    graph_add_road(g, 9, 10, 5.5, 1);
+    /* 17 Real-World Connected Roadway Distances (km) */
+    graph_add_road(g, 1, 2, 4.20, 1);
+    graph_add_road(g, 1, 5, 7.50, 1);
+    graph_add_road(g, 1, 6, 9.50, 1);
+    graph_add_road(g, 2, 12, 3.00, 1);
+    graph_add_road(g, 3, 4, 5.20, 1);
+    graph_add_road(g, 3, 8, 6.00, 1);
+    graph_add_road(g, 3, 12, 4.50, 1);
+    graph_add_road(g, 4, 7, 4.80, 1);
+    graph_add_road(g, 4, 9, 6.50, 1);
+    graph_add_road(g, 5, 6, 3.50, 1);
+    graph_add_road(g, 6, 4, 8.00, 1);
+    graph_add_road(g, 7, 8, 3.20, 1);
+    graph_add_road(g, 7, 9, 7.00, 1);
+    graph_add_road(g, 7, 10, 6.00, 1);
+    graph_add_road(g, 8, 10, 7.50, 1);
+    graph_add_road(g, 9, 11, 8.50, 1);
+    graph_add_road(g, 10, 11, 14.00, 1);
 
     return storage_save_all(g, loc_file, road_file);
 }

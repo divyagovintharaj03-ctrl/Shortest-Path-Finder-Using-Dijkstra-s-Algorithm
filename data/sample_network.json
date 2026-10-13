@@ -1,65 +1,80 @@
 {
   "project": "Shortest Path Finder",
-  "author": "Data Structures Mini Project",
-  "description": "Realistic fictional road network with 10 locations and 17 weighted roads for Dijkstra's algorithm demonstration.",
-  "disclaimer": "Distances are illustrative values in kilometers designed for testing optimal route finding, not real-world GPS coordinates.",
+  "category": "Real-World Geographic Network",
+  "region": "Chennai Metropolitan Area, India",
+  "description": "Real-world road network with 12 prominent landmarks and 17 weighted roadways connecting transit, commercial, and educational hubs.",
+  "coordinates_format": {
+    "x": "Longitude (GPS East)",
+    "y": "Latitude (GPS North)"
+  },
   "sample_verified_query": {
-    "source": { "id": 1, "name": "College" },
-    "destination": { "id": 10, "name": "Airport" },
-    "expected_shortest_distance_km": 18.00,
-    "expected_route_sequence": ["College", "Hospital", "Park", "Airport"],
+    "source": { "id": 1, "name": "Central Railway Station" },
+    "destination": { "id": 9, "name": "Chennai International Airport (MAA)" },
+    "expected_shortest_distance_km": 23.40,
+    "expected_route_sequence": [
+      "Central Railway Station",
+      "Marina Beach",
+      "Mylapore Kapaleeshwarar",
+      "T. Nagar (Panagal Park)",
+      "Guindy Kathipara Junction",
+      "Chennai International Airport (MAA)"
+    ],
     "expected_roads_used": [
-      { "from": "College", "to": "Hospital", "distance_km": 6.5 },
-      { "from": "Hospital", "to": "Park", "distance_km": 3.0 },
-      { "from": "Park", "to": "Airport", "distance_km": 8.5 }
+      { "from": "Central Railway Station", "to": "Marina Beach", "distance_km": 4.20 },
+      { "from": "Marina Beach", "to": "Mylapore Kapaleeshwarar", "distance_km": 3.00 },
+      { "from": "Mylapore Kapaleeshwarar", "to": "T. Nagar (Panagal Park)", "distance_km": 4.50 },
+      { "from": "T. Nagar (Panagal Park)", "to": "Guindy Kathipara Junction", "distance_km": 5.20 },
+      { "from": "Guindy Kathipara Junction", "to": "Chennai International Airport (MAA)", "distance_km": 6.50 }
     ],
     "competing_alternate_routes": [
       {
-        "route": ["College", "Bus Stand", "Library", "City Centre", "Airport"],
-        "distance_km": 18.70,
-        "calculation": "4.0 + 3.5 + 5.2 + 6.0"
+        "route": ["Central Railway Station", "Koyambedu CMBT Bus Terminus", "Guindy Kathipara Junction", "Chennai International Airport (MAA)"],
+        "distance_km": 24.00,
+        "calculation": "9.50 + 8.00 + 6.50"
       },
       {
-        "route": ["College", "Hospital", "Park", "City Centre", "Airport"],
-        "distance_km": 20.50,
-        "calculation": "6.5 + 3.0 + 5.0 + 6.0"
+        "route": ["Central Railway Station", "Anna Nagar Tower", "Koyambedu CMBT Bus Terminus", "Guindy Kathipara Junction", "Chennai International Airport (MAA)"],
+        "distance_km": 25.50,
+        "calculation": "7.50 + 3.50 + 8.00 + 6.50"
       },
       {
-        "route": ["College", "Bus Stand", "Railway Station", "Market", "Shopping Mall", "Airport"],
-        "distance_km": 22.70,
-        "calculation": "4.0 + 5.0 + 4.2 + 4.0 + 5.5"
+        "route": ["Central Railway Station", "Marina Beach", "Mylapore Kapaleeshwarar", "T. Nagar", "IIT Madras", "Velachery", "Airport MAA"],
+        "distance_km": 27.90,
+        "calculation": "4.20 + 3.00 + 4.50 + 6.00 + 3.20 + 7.00"
       }
     ]
   },
   "locations": [
-    { "id": 1, "code": "COLLEGE", "name": "College", "x": 130, "y": 160 },
-    { "id": 2, "code": "BUS_STAND", "name": "Bus Stand", "x": 290, "y": 250 },
-    { "id": 3, "code": "RAILWAY_STN", "name": "Railway Station", "x": 460, "y": 130 },
-    { "id": 4, "code": "HOSPITAL", "name": "Hospital", "x": 220, "y": 430 },
-    { "id": 5, "code": "LIBRARY", "name": "Library", "x": 460, "y": 310 },
-    { "id": 6, "code": "MARKET", "name": "Market", "x": 640, "y": 210 },
-    { "id": 7, "code": "PARK", "name": "Park", "x": 410, "y": 500 },
-    { "id": 8, "code": "CITY_CENTRE", "name": "City Centre", "x": 670, "y": 400 },
-    { "id": 9, "code": "SHOPPING_MALL", "name": "Shopping Mall", "x": 830, "y": 260 },
-    { "id": 10, "code": "AIRPORT", "name": "Airport", "x": 870, "y": 490 }
+    { "id": 1, "code": "CENTRAL_STN", "name": "Central Railway Station", "x": 80.2757, "y": 13.0827 },
+    { "id": 2, "code": "MARINA_BEACH", "name": "Marina Beach", "x": 80.2824, "y": 13.0500 },
+    { "id": 3, "code": "T_NAGAR", "name": "T. Nagar (Panagal Park)", "x": 80.2337, "y": 13.0405 },
+    { "id": 4, "code": "GUINDY_KATHIPARA", "name": "Guindy Kathipara Junction", "x": 80.2206, "y": 13.0067 },
+    { "id": 5, "code": "ANNA_NAGAR", "name": "Anna Nagar Tower", "x": 80.2100, "y": 13.0850 },
+    { "id": 6, "code": "CMBT_KOYAMBEDU", "name": "Koyambedu CMBT Bus Terminus", "x": 80.1948, "y": 13.0694 },
+    { "id": 7, "code": "VELACHERY", "name": "Velachery Junction", "x": 80.2180, "y": 12.9815 },
+    { "id": 8, "code": "IIT_MADRAS", "name": "IIT Madras Main Gate", "x": 80.2337, "y": 12.9915 },
+    { "id": 9, "code": "AIRPORT_MAA", "name": "Chennai International Airport (MAA)", "x": 80.1709, "y": 12.9941 },
+    { "id": 10, "code": "OMR_THORAIPAKKAM", "name": "OMR IT Corridor (Thoraipakkam)", "x": 80.2312, "y": 12.9360 },
+    { "id": 11, "code": "TAMBARAM_JN", "name": "Tambaram Railway Junction", "x": 80.1000, "y": 12.9249 },
+    { "id": 12, "code": "MYLAPORE", "name": "Mylapore Kapaleeshwarar", "x": 80.2694, "y": 13.0334 }
   ],
   "roads": [
-    { "u_id": 1, "v_id": 2, "weight": 4.0, "bidirectional": true },
-    { "u_id": 1, "v_id": 4, "weight": 6.5, "bidirectional": true },
-    { "u_id": 2, "v_id": 3, "weight": 5.0, "bidirectional": true },
-    { "u_id": 2, "v_id": 5, "weight": 3.5, "bidirectional": true },
-    { "u_id": 3, "v_id": 6, "weight": 4.2, "bidirectional": true },
-    { "u_id": 4, "v_id": 5, "weight": 4.0, "bidirectional": true },
-    { "u_id": 4, "v_id": 7, "weight": 3.0, "bidirectional": true },
-    { "u_id": 5, "v_id": 6, "weight": 3.8, "bidirectional": true },
-    { "u_id": 5, "v_id": 7, "weight": 4.5, "bidirectional": true },
-    { "u_id": 5, "v_id": 8, "weight": 5.2, "bidirectional": true },
-    { "u_id": 6, "v_id": 9, "weight": 4.0, "bidirectional": true },
-    { "u_id": 6, "v_id": 8, "weight": 3.5, "bidirectional": true },
-    { "u_id": 7, "v_id": 8, "weight": 5.0, "bidirectional": true },
-    { "u_id": 7, "v_id": 10, "weight": 8.5, "bidirectional": true },
-    { "u_id": 8, "v_id": 9, "weight": 3.0, "bidirectional": true },
-    { "u_id": 8, "v_id": 10, "weight": 6.0, "bidirectional": true },
-    { "u_id": 9, "v_id": 10, "weight": 5.5, "bidirectional": true }
+    { "u_id": 1, "v_id": 2, "weight": 4.20, "bidirectional": true },
+    { "u_id": 1, "v_id": 5, "weight": 7.50, "bidirectional": true },
+    { "u_id": 1, "v_id": 6, "weight": 9.50, "bidirectional": true },
+    { "u_id": 2, "v_id": 12, "weight": 3.00, "bidirectional": true },
+    { "u_id": 3, "v_id": 4, "weight": 5.20, "bidirectional": true },
+    { "u_id": 3, "v_id": 8, "weight": 6.00, "bidirectional": true },
+    { "u_id": 3, "v_id": 12, "weight": 4.50, "bidirectional": true },
+    { "u_id": 4, "v_id": 7, "weight": 4.80, "bidirectional": true },
+    { "u_id": 4, "v_id": 9, "weight": 6.50, "bidirectional": true },
+    { "u_id": 5, "v_id": 6, "weight": 3.50, "bidirectional": true },
+    { "u_id": 6, "v_id": 4, "weight": 8.00, "bidirectional": true },
+    { "u_id": 7, "v_id": 8, "weight": 3.20, "bidirectional": true },
+    { "u_id": 7, "v_id": 9, "weight": 7.00, "bidirectional": true },
+    { "u_id": 7, "v_id": 10, "weight": 6.00, "bidirectional": true },
+    { "u_id": 8, "v_id": 10, "weight": 7.50, "bidirectional": true },
+    { "u_id": 9, "v_id": 11, "weight": 8.50, "bidirectional": true },
+    { "u_id": 10, "v_id": 11, "weight": 14.00, "bidirectional": true }
   ]
 }

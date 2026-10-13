@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Shortest Path Finder - Data Structures Mini Project implementing Dijkstra's Algorithm in C with an interactive modern Light Theme web interface.">
-  <title>Shortest Path Finder | C Data Structures Project</title>
   <link rel="stylesheet" href="css/styles.css">
+  <!-- Leaflet.js for Real World OpenStreetMap & CartoDB tiles -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -168,13 +170,24 @@
           </div>
         </div>
 
-        <!-- Embedded Interactive Map -->
+        <!-- Embedded Interactive Map (Real World & Schematic) -->
         <div class="card" style="padding: 1rem;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
-            <h3 class="card-title" style="font-size: 1rem;">Live Network Map</h3>
-            <span style="font-size: 0.78rem; color: var(--text-muted);">Drag any node to rearrange layout</span>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <h3 class="card-title" style="font-size: 1rem; margin-bottom: 0;">Map Visualization</h3>
+              <span style="font-size: 0.75rem; background: var(--primary-100); color: var(--primary-800); padding: 2px 7px; border-radius: var(--radius-full); font-weight: 600;">Real World GPS</span>
+            </div>
+            <div style="display: flex; gap: 4px; background: var(--bg-subtle); padding: 3px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <button id="toggleRealMapBtn" class="btn btn-sm btn-primary" style="padding: 3px 10px; font-size: 0.78rem;">🌍 Real World Map</button>
+              <button id="toggleCanvasMapBtn" class="btn btn-sm btn-secondary" style="padding: 3px 10px; font-size: 0.78rem;">🕸️ Schematic Graph</button>
+            </div>
           </div>
-          <div class="graph-canvas-container" style="height: 520px;">
+
+          <!-- Real World Street Map (Leaflet / OpenStreetMap) -->
+          <div id="realWorldMap" style="height: 520px; border-radius: var(--radius-md); border: 1px solid var(--border-color); overflow: hidden; position: relative;"></div>
+
+          <!-- Schematic Canvas Map (Fallback / Alternate View) -->
+          <div id="graphCanvasContainer" class="graph-canvas-container" style="height: 520px; display: none;">
             <canvas id="graphCanvas"></canvas>
             <div class="canvas-legend">
               <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Start Location</div>
@@ -192,26 +205,24 @@
       </div>
     </section>
 
-    <!-- 3. MAP VIEW (FULLSCREEN) -->
+    <!-- 3. MAP VIEW (FULLSCREEN REAL WORLD STREET MAP) -->
     <section id="visTab" class="tab-pane">
       <div class="page-header" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
         <div>
-          <h2 class="page-title">Interactive Graph Visualization</h2>
-          <p class="page-subtitle">Visual representation of graph vertices (locations) and weighted edges (roads).</p>
+          <h2 class="page-title">Real World Geographic Network Map</h2>
+          <p class="page-subtitle">Interactive street map powered by OpenStreetMap with real GPS coordinates and road connections.</p>
         </div>
         <button class="btn btn-secondary btn-sm" data-switch-tab="route">← Back to Route Query</button>
       </div>
 
       <div class="card" style="padding: 1rem;">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
           <div style="font-size: 0.88rem; color: var(--text-muted);">
-            💡 <strong>Tip:</strong> Drag vertices to organize positions. Use mouse wheel or controls to zoom and pan.
+            💡 <strong>Interactive Real Map:</strong> Click anywhere on the map to add a new real location. Click any pin to set it as Start or Destination.
           </div>
           <button id="resetDefaultsBtn" class="btn btn-secondary btn-sm">↺ Restore Default Network</button>
         </div>
-        <div class="graph-canvas-container" style="height: 600px;">
-          <!-- Graph visualizer attaches to primary canvas -->
-        </div>
+        <div id="realWorldMapFull" style="height: 600px; border-radius: var(--radius-md); border: 1px solid var(--border-color); overflow: hidden;"></div>
       </div>
     </section>
 
@@ -519,6 +530,7 @@ ALGORITHM Dijkstra(Graph G, Source s, Destination d):
 
   <!-- Scripts -->
   <script src="js/api.js"></script>
+  <script src="js/real_map.js"></script>
   <script src="js/graph_vis.js"></script>
   <script src="js/dijkstra_demo.js"></script>
   <script src="js/app.js"></script>

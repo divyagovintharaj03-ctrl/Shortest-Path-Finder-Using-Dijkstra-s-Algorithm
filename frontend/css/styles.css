@@ -816,3 +816,24 @@ pre.code-block {
     height: 380px;
   }
 }
+
+/* Real World Map Custom Elements */
+.custom-map-pin {
+  background: transparent;
+  border: none;
+}
+
+.route-active-tooltip {
+  background: #7c3aed !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 700 !important;
+  border-radius: 9999px !important;
+  padding: 4px 10px !important;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35) !important;
+  font-size: 0.82rem !important;
+}
+
+.route-active-tooltip::before {
+  border-top-color: #7c3aed !important;
+}

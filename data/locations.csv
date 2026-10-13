@@ -1,11 +1,13 @@
 id,code,name,x,y
-1,COLLEGE,College,130,160
-2,BUS_STAND,Bus Stand,290,250
-3,RAILWAY_STN,Railway Station,460,130
-4,HOSPITAL,Hospital,220,430
-5,LIBRARY,Library,460,310
-6,MARKET,Market,640,210
-7,PARK,Park,410,500
-8,CITY_CENTRE,City Centre,670,400
-9,SHOPPING_MALL,Shopping Mall,830,260
-10,AIRPORT,Airport,870,490
+1,CENTRAL_STN,Central Railway Station,80.2757,13.0827
+2,MARINA_BEACH,Marina Beach,80.2824,13.0500
+3,T_NAGAR,T. Nagar (Panagal Park),80.2337,13.0405
+4,GUINDY_KATHIPARA,Guindy Kathipara Junction,80.2206,13.0067
+5,ANNA_NAGAR,Anna Nagar Tower,80.2100,13.0850
+6,CMBT_KOYAMBEDU,Koyambedu CMBT Bus Terminus,80.1948,13.0694
+7,VELACHERY,Velachery Junction,80.2180,12.9815
+8,IIT_MADRAS,IIT Madras Main Gate,80.2337,12.9915
+9,AIRPORT_MAA,Chennai International Airport (MAA),80.1709,12.9941
+10,OMR_THORAIPAKKAM,OMR IT Corridor (Thoraipakkam),80.2312,12.9360
+11,TAMBARAM_JN,Tambaram Railway Junction,80.1000,12.9249
+12,MYLAPORE,Mylapore Kapaleeshwarar,80.2694,13.0334
